@@ -16,7 +16,8 @@ class TargetSpider(scrapy.Spider):
 	name = "target_iphone_data"
 	
 	def start_requests(self):
-
+		""""start function,get request to a url"""
+		
 		url = (
 			"https://redsky.target.com/redsky_aggregations/v1/web/pdp_client_v1?"
 			"key=ff457966e64d5e877fdbad070f276d18ecec4a01&tcin=84616123&store_id=1232"
@@ -27,6 +28,9 @@ class TargetSpider(scrapy.Spider):
 		yield scrapy.Request(url=url, callback=self.parse_product_page)
 		
 	def parse_product_page(self, response):
+
+		"""function for parsing product  page, json response from the start function"""
+
 		if response.status == 200:
 			logger.info("Succefully extracted the product page")
 		else:
@@ -97,6 +101,9 @@ class TargetSpider(scrapy.Spider):
 		yield scrapy.Request(url=question_url, callback=self.parse_questions, meta=meta_data)
 
 	def parse_questions(self, response):
+
+		"""function for parsing qustions page"""
+
 		product_data = response.meta['product_data']
 		if response.status == 200:
 			logger.info("Succefully extracted the QA page")
@@ -119,6 +126,8 @@ class TargetSpider(scrapy.Spider):
 
 	def get_json_response(self, response):
 
+		"""function for loading json"""
+
 		try:
 			response_json = json.loads(response.text)
 		except Exception:
@@ -131,6 +140,9 @@ class TargetSpider(scrapy.Spider):
 		return response_json
 
 	def clean_html_content(self, raw_content):
+
+		"""function for cleaning strings conatining html contents"""
+
 		if not raw_content:
 			return 
 		parser = html.fromstring(raw_content)
